@@ -1,7 +1,11 @@
 const express = require('express');
 const bodyParser = require("body-parser");
+const mongoose = require('mongoose');
 const app = express();
 const port = 3000; 
+
+// Models
+const User = require('./models/user');
 
 // Controllers
 const authController = require('./controllers/authController');
@@ -21,8 +25,13 @@ app.use((req,res,next)=> {
 });
 
 app.use(authRouter);
+app.use(User);
 
-// Start the server
-app.listen(port, () => {
-  console.log(`Server is running on port ${port}`);
-});
+mongoose.connect('mongodb+srv://yididiya:mnYxZgzDQhULh2Ow@cluster0.de0jhxk.mongodb.net/shekilaStock-DB?retryWrites=true&w=majority').then(result=> {
+  app.listen(port, () => {
+    console.log(`Server is running on port ${port}`);
+  //  console.log(result);
+  });
+}).catch(err=> {
+  console.log(err);
+})
