@@ -1,10 +1,12 @@
 const bcrypt = require("bcryptjs");
+const JWT = require('jsonwebtoken');
 
 const User = require('../models/user');
 
 exports.signIn = (req,res,next)=> {
   const userEmail = req.body.email;
   const userPass = req.body.pass;
+  let loadedUser;
 
   User.findOne({ userEmail: userEmail })
     .then((user) => {
@@ -12,18 +14,20 @@ exports.signIn = (req,res,next)=> {
       if (!user) {
         console.log('incorrect user');
         return res.status(422).json({message:'user not found!'});
-      }else{
+      }
+       loadedUser = user;
         bcrypt
           .compare(userPass, user.userPass)
           .then((matched) => {
             if (matched) {
-            console.log(userEmail,userPass);
-             return res.status(201).json({message:'auth work!',data:{userEmail:userEmail,userPass:userPass}});
+            const token = JWT.sign({userId:loadedUser._id.toString(),userName:loadedUser.userName},'secret',{expiresIn: '5h'});
+            
+            return res.status(200).json({message:'auth work!',token:token,userId:loadedUser._id.toString(),userName:loadedUser.userName});
             }else{
               return res.json({message:"incorrect password provided"});
             }});
-          }
-        });
+       
+    });
 }
 
 exports.signUp = (req,res,next) => {
