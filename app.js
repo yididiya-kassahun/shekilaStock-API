@@ -1,9 +1,11 @@
 const express = require('express');
 const bodyParser = require("body-parser");
 const mongoose = require('mongoose');
+const path = require('path');
 const multer = require('multer');
 const app = express();
 const port = 3000; 
+
 
 const fileStorage = multer.diskStorage({
   destination:(req,file,cb)=> {
@@ -16,7 +18,7 @@ const fileStorage = multer.diskStorage({
 })
 
 const fileFilter = (req,file,cb)=> {
-  if(file.mimetype === 'image/png'||file.mimetype === 'image/jpg'||file.mimetype === 'image/jpeg'){
+  if(file.mimetype === 'image/png'||file.mimetype === 'image/jpg'||file.mimetype === 'image/jpeg'||file.mimetype === 'image/webp'){
        cb(null,true);
   }else{
     cb(null,false);
@@ -38,8 +40,11 @@ app.use(bodyParser.json()); // application/json
 //app.use(bodyParser.urlencoded({ extended: true })); // for x-www-form-urlencoded data <form>
 app.use(multer({storage:fileStorage,fileFilter:fileFilter}).single('image'));
 
+ 
+//  app.use(express.static('public/uploads/'));
 app.use(express.static('public'));
-app.use(express.static('public/uploads'));
+
+//app.use('public/uploads',express.static(path.join(__dirname,'public/uploads')));
 
 app.use((req,res,next)=> {
   res.setHeader('Access-Control-Allow-Origin','*');

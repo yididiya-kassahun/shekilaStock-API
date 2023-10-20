@@ -1,14 +1,12 @@
-const product = require('../models/product');
-const path = require("path");
 const Product = require('../models/product');
 
 exports.addProduct =(req,res)=> {
-//     if(!req.file){
-//    return res.status(422).json({message:'no image provided'});
-//     }
+    if(!req.file){
+   return res.status(422).json({message:'no image provided'});
+    }
     const title = req.body.title;
     const price = req.body.price;
-    const imageURL = req.file.path;
+    const imageURL = req.file.filename;
 
    const product = new Product({
         title:title,
@@ -26,5 +24,11 @@ exports.addProduct =(req,res)=> {
 }
 
 exports.getProduct = (req,res)=> {
-    
+    Product.find()
+       .then(products=> {
+          return res.status(201).json({products:products});
+       })
+       .catch(err=> {
+        console.log(err);
+       })
 }
