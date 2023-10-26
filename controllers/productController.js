@@ -32,3 +32,16 @@ exports.getProduct = (req,res)=> {
         console.log(err);
        })
 }
+
+exports.productDetail = (req,res) => {
+    const id = req.params.id;
+
+    Product.findById(id)
+       .then(product=> {
+        console.log(product);
+        return res.status(201).json({product:product});
+       })
+       .catch(err=> {
+        console.log(err);
+       })
+}

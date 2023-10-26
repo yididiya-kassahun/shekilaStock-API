@@ -28,6 +28,8 @@ const fileFilter = (req,file,cb)=> {
 // Models
 const User = require('./models/user');
 const Product = require('./models/product');
+const Cart = require('./models/cart');
+const Comment = require('./models/comment');
 
 // Controllers
 const authController = require('./controllers/authController');
@@ -57,6 +59,8 @@ app.use(authRouter);
 app.use(productRoute);
 app.use(User);
 app.use(Product);
+app.use(Cart);
+app.use(Comment);
 
 mongoose.connect('mongodb+srv://yididiya:mnYxZgzDQhULh2Ow@cluster0.de0jhxk.mongodb.net/shekilaStock-DB?retryWrites=true&w=majority').then(result=> {
   app.listen(port, () => {

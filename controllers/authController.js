@@ -20,11 +20,11 @@ exports.signIn = (req,res,next)=> {
           .compare(userPass, user.userPass)
           .then((matched) => {
             if (matched) {
-            const token = JWT.sign({userId:loadedUser._id.toString(),userName:loadedUser.userName},'secret',{expiresIn: '5h'});
+            const token = JWT.sign({userId:loadedUser._id.toString(),userName:loadedUser.userName},'secret',{expiresIn: '1h'});
             
-            return res.status(200).json({message:'auth work!',token:token,userId:loadedUser._id.toString(),userName:loadedUser.userName});
+            return res.status(200).json({message:'auth work!',isLoggedin:true,token:token,userId:loadedUser._id.toString(),userName:loadedUser.userName});
             }else{
-              return res.json({message:"incorrect password provided"});
+              return res.json({message:"incorrect password provided",isLoggedin:false});
             }});
        
     });
