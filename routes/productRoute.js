@@ -12,4 +12,6 @@ router.get('/product.detail/:id',productController.productDetail);
 router.post('/add.cart',isAuth,productController.addToCart);
 router.get('/get.cart',isAuth,productController.getCart);
 
+router.post('/add.comment',isAuth, productController.addProductComment);
+router.get('/get.comments/:prodId',productController.getProductComment);
 module.exports = router;

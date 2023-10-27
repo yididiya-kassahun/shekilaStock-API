@@ -3,8 +3,6 @@ const Cart = require('../models/cart');
 const Comment = require('../models/comment');
 const User = require('../models/user');
 
-const mongoose = require('mongoose');
-
 let creator;
 
 exports.addProduct =(req,res)=> {
@@ -63,7 +61,6 @@ exports.productDetail = (req,res) => {
         console.log(err);
        })
 }
-let cartItem;
 
 exports.addToCart = async (req,res)=> {
       const userId = req.userId;
@@ -113,15 +110,37 @@ exports.getCart = (req,res)=> {
         console.log(err);
         res.status(500).json({ message: 'Internal Server Error' });
       });
-    
-  
-    // .then(items=> {
-    //   //  Product.find()
-    //     res.status(200).json({message:'list of cart',cartItems:items});
-    // })
-    // .catch(err=>{
-    //     console.log(err);
-    //     res.status(422).json({message:'server error'});
-    // })
 }
 
+exports.addProductComment = (req,res,next) => {
+    const productId = req.body.productId;
+    const productComment = req.body.comment;
+
+    if(!req.userId){
+         res.json({message:'unAuthorized'});
+    }
+    const comment = new Comment({
+        userId:req.userId,
+        productId:productId,
+        comment:productComment
+    });
+    comment.save()
+    .then(res=>{
+        res.json({message:'comment added',res:res});
+    })
+    .catch(err=>{
+        console.log(err);
+    });
+}
+
+exports.getProductComment = (req,res)=>{
+    const productId = req.params.prodId;
+ 
+    Comment.find({productId})
+    .then(commentList=>{
+        res.json({message:'list of comments', comments:commentList});
+    })
+    .catch(err=>{
+        console.log(err);
+    })
+}
