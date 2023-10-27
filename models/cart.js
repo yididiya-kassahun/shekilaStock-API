@@ -7,10 +7,13 @@ const cartSchema = new Schema({
     type: String,
     required:true
    },
-   productId: {
-    type: String,
-    required:true
-   },
+   product:[
+      {
+         type:Schema.Types.ObjectId,
+         ref:'product',
+         required:true
+      }
+   ]
 });
 
 module.exports = mongoose.model('cart',cartSchema);

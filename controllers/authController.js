@@ -16,13 +16,14 @@ exports.signIn = (req,res,next)=> {
         return res.status(422).json({message:'user not found!'});
       }
        loadedUser = user;
+       
         bcrypt
           .compare(userPass, user.userPass)
           .then((matched) => {
             if (matched) {
-            const token = JWT.sign({userId:loadedUser._id.toString(),userName:loadedUser.userName},'secret',{expiresIn: '1h'});
+            const token = JWT.sign({userId:loadedUser._id.toString(),userName:loadedUser.userName},'shekilasecret',{expiresIn: '8h'});
             
-            return res.status(200).json({message:'auth work!',isLoggedin:true,token:token,userId:loadedUser._id.toString(),userName:loadedUser.userName});
+            return res.status(200).json({message:'auth work!',isLoggedin:true,token:token,userName:loadedUser.userName});
             }else{
               return res.json({message:"incorrect password provided",isLoggedin:false});
             }});
