@@ -12,11 +12,13 @@ exports.addProduct =(req,res)=> {
     const title = req.body.title;
     const price = req.body.price;
     const imageURL = req.file.filename;
+    const description = req.body.description;
 
    const product = new Product({
         title:title,
         price:price,
         image:imageURL,
+        description:description,
         userId:req.userId
     });
     product.save()
@@ -113,6 +115,7 @@ exports.getCart = (req,res)=> {
 }
 
 exports.addProductComment = (req,res,next) => {
+    const userName = req.body.userName;
     const productId = req.body.productId;
     const productComment = req.body.comment;
 
@@ -120,13 +123,13 @@ exports.addProductComment = (req,res,next) => {
          res.json({message:'unAuthorized'});
     }
     const comment = new Comment({
-        userId:req.userId,
+        userName:userName,
         productId:productId,
         comment:productComment
     });
     comment.save()
-    .then(res=>{
-        res.json({message:'comment added',res:res});
+    .then(result=>{
+        res.json({message:'comment added',res:result});
     })
     .catch(err=>{
         console.log(err);
@@ -136,11 +139,12 @@ exports.addProductComment = (req,res,next) => {
 exports.getProductComment = (req,res)=>{
     const productId = req.params.prodId;
  
-    Comment.find({productId})
+    Comment.find({productId:productId})
     .then(commentList=>{
         res.json({message:'list of comments', comments:commentList});
     })
     .catch(err=>{
         console.log(err);
+        res.json({message:'unable to fetch comments'});
     })
 }
